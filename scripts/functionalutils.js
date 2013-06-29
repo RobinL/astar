@@ -1,53 +1,129 @@
 MYAPP.util = (function() {
 
-	function forEach(arr, action) {
-		for (var i = 0; i < arr.length; i++) {
-			action(arr[i]);
-		}
-	}
+var Break = {name: "Break"};
 
-	function reduce(combine, base, array) {
-		forEach(array,function(element) {
-			base = combine(base,element);
-		});
-		return base;
-	}
+function forEach(array, action) {
+  var len = array.length;
+  try {
+    for (var i = 0; i < len; i++)
+      action(array[i]);
+  }
+  catch(e) {
+    if (e != Break)
+      throw e;
+  }
+}
 
+function forEachIn(object, action) {
+  try {
+    for (var property in object) {
+      if (Object.prototype.hasOwnProperty.call(object, property))
+        action(property, object[property]);
+    }
+  }
+  catch(e) {
+    if (e != Break)
+      throw e;
+  }
+}
+  
+function map(func, array) {
+  var len = array.length;
+  var result = new Array(len);
+  for (var i = 0; i < len; i++)
+    result[i] = func(array[i]);
+  return result;
+}
 
-	function map (func, array) {
-		var result = [];
-		forEach(array, function (element) {
-			result.push(func(element));
-		});
-		return result;
-	}
+function reduce(func, start, array) {
+  var len = array.length;
+  for (var i = 0; i < len; i++)
+    start = func(start, array[i]);
+  return start;
+}
 
-	var op = {
-		"+": function(a, b) {return a + b;},
-		"==": function(a, b) {return a == b;},
-		"===": function(a, b) {return a === b;},
-		"!": function(a) {return !a;}
-	};
+function filter(test, array) {
+  var result = [], len = array.length;
+  for (var i = 0; i < len; i++) {
+    var current = array[i];
+    if (test(current))
+      result.push(current);
+  }
+  return result;
+}
 
-	function asArray(quasiArray, start) {
-		var result = [];
-		for (var i = (start || 0); i < quasiArray.length; i++)
-			result.push(quasiArray[i]);
-		return result;
-	}
+function any(test, array) {
+  for (var i = 0; i < array.length; i++) {
+    var found = test(array[i]);
+    if (found)
+      return found;
+  }
+  return false;
+}
 
-	function partial(func) {
-		var fixedArgs = asArray(arguments, 1);
-		return function() {
-			return func.apply(null, fixedArgs.concat(asArray(arguments)));
-		};
-	}
+function partial(func) {
+  function asArray(quasiArray, start) {
+    var result = [], len = quasiArray.length;
+    for (var i = (start || 0); i < len; i++)
+      result.push(quasiArray[i]);
+    return result;
+  }
+  var fixedArgs = asArray(arguments, 1);
+  return function(){
+    return func.apply(null, fixedArgs.concat(asArray(arguments)));
+  };
+}
 
-	return {
-		forEach: forEach,
-		reduce: reduce,
-		map:map,
-		op:op,
-		partial:partial
-	};
+function bind(func, object) {
+  return function(){
+    return func.apply(object, arguments);
+  };
+}
+
+function method(object, name) {
+  return function() {
+    object[name].apply(object, arguments);
+  };
+}
+
+function compose(func1, func2) {
+  return function() {
+    return func1(func2.apply(null, arguments));
+  };
+}
+
+var op = function(){
+  var result = {
+    "-": function(a, b) {
+      if (arguments.length < 2)
+        return -a;
+      else
+        return a - b;
+    },
+    "!": function(a) {return !a;},
+    "typeof": function(a) {return typeof a;},
+    "?": function(a, b, c) {return a ? b : c;}
+  };
+  var ops = ["+", "*", "/", "%", "&&", "||", "==", "!=", "===",
+             "!==", "<", ">", ">=", "<=", "in", "instanceof"];
+  forEach(ops, function(op){
+    result[op] = eval("[function(a, b){return a " + op + " b;}][0]");
+  });
+  return result;
+}();
+
+return {
+	forEach: forEach,
+	forEachIn:forEachIn,
+	map:map,
+	reduce:reduce,
+	filter:filter,
+	any:any,
+	partial:partial,
+	bind:bind,
+	method:method,
+	compose:compose,
+	op:op
+};
+
 })();
