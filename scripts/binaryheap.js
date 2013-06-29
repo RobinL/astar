@@ -1,3 +1,5 @@
+//Taken from eloquent javascript
+
 MYAPP.util.BinaryHeap = function BinaryHeap(scoreFunction){
   this.content = [];
   this.scoreFunction = scoreFunction;
