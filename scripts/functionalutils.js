@@ -1,4 +1,4 @@
-MYAPP.util = (function() {
+MYAPP.functiionalUtilities = (function() {
 
 
 var Break = {name: "Break"};
@@ -60,6 +60,15 @@ function any(test, array) {
       return found;
   }
   return false;
+}
+
+function every(test, array) {
+  for (var i = 0; i < array.length; i++) {
+    var found = test(array[i]);
+    if (!found)
+      return found;
+  }
+  return true;
 }
 
 function partial(func) {
@@ -124,7 +133,8 @@ return {
 	bind:bind,
 	method:method,
 	compose:compose,
-	op:op
+	op:op,
+	every: every
 };
 
 })();

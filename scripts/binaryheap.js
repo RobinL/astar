@@ -1,11 +1,11 @@
 //Taken from eloquent javascript
 
-MYAPP.util.BinaryHeap = function BinaryHeap(scoreFunction){
+MYAPP.utilities.BinaryHeap = function BinaryHeap(scoreFunction){
   this.content = [];
   this.scoreFunction = scoreFunction;
 };
 
-MYAPP.util.BinaryHeap.prototype = {
+MYAPP.utilities.BinaryHeap.prototype = {
   push: function(element) {
     // Add the new element to the end of the array.
     this.content.push(element);
