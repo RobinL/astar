@@ -1,4 +1,4 @@
-MYAPP.functiionalUtilities = (function() {
+MYAPP.functionalUtilities = (function() {
 
 
 var Break = {name: "Break"};

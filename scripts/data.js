@@ -1,5 +1,5 @@
 //Could have some sort of interface here.  So one function would be 'heightat', another might be 'changepoint' or something
-
+MYAPP.data = {};
 MYAPP.data.heights = [
 		[111, 111, 122, 137, 226, 192, 246, 275, 285, 333, 328, 264, 202, 175, 151, 222, 250, 222, 219, 146],
 		[205, 186, 160, 218, 217, 233, 268, 300, 316, 357, 276, 240, 240, 253, 215, 201, 256, 312, 224, 200],
