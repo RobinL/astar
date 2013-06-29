@@ -1,6 +1,6 @@
 MYAPP.utilities = (function() {
 
-var fu = MYAPP.functiionalUtilities;
+var fu = MYAPP.functionalUtilities;
 
 function flatten(arrays) {
     var result = [];

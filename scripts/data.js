@@ -1,6 +1,7 @@
 //Could have some sort of interface here.  So one function would be 'heightat', another might be 'changepoint' or something
-MYAPP.data = {};
-MYAPP.data.heights = [
+MYAPP.data = (function(){
+
+var heights = [
 		[111, 111, 122, 137, 226, 192, 246, 275, 285, 333, 328, 264, 202, 175, 151, 222, 250, 222, 219, 146],
 		[205, 186, 160, 218, 217, 233, 268, 300, 316, 357, 276, 240, 240, 253, 215, 201, 256, 312, 224, 200],
 		[228, 176, 232, 258, 246, 289, 306, 351, 374, 388, 319, 333, 299, 307, 261, 286, 291, 355, 277, 258],
@@ -22,3 +23,40 @@ MYAPP.data.heights = [
 		[342, 362, 381, 359, 353, 353, 369, 391, 384, 372, 408, 448, 382, 358, 256, 178, 143, 125, 85, 109],
 		[311, 337, 358, 376, 330, 341, 342, 374, 411, 408, 421, 382, 271, 311, 246, 166, 132, 116, 108, 72]
 	];
+
+function point(x, y) {
+  return {x: x, y: y};
+}
+
+var heightAt = function(point) {
+	return heights[point.y][point.x];
+};
+
+
+var gridHeight = function() {
+	return heights.length;
+}
+
+var gridWidth = function() {
+	return heights[0].length;
+}
+
+var maxHeight = function() {
+	return Math.max.apply(Math, MYAPP.utilities.flatten(heights));
+}
+
+var minHeight = function() {
+	return Math.min.apply(Math, MYAPP.utilities.flatten(heights));
+}
+
+
+return {
+	heightAt: heightAt,
+	gridHeight:gridHeight,
+	gridWidth:gridWidth,
+	heights: heights,
+	maxHeight:maxHeight,
+	minHeight:minHeight
+}
+
+})();
