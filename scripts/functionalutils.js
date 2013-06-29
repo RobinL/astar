@@ -1,5 +1,6 @@
 MYAPP.util = (function() {
 
+
 var Break = {name: "Break"};
 
 function forEach(array, action) {
