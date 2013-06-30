@@ -26,6 +26,13 @@ MYAPP.vis.canvas = (function(){
 				.append("g")
 				.attr("class","margingroup")
 				.attr("transform", "translate(" + g.svgMargin.left + "," + g.svgMargin.top + ")");
+
+		var gridgroup = g.svg.append("g").attr("class", "gridgroup");
+		var routeGroup = g.svg.append("g").attr("class","routeTileGroup");
+
+
+
+
 	}
 
 	return {
@@ -47,37 +54,54 @@ MYAPP.vis.draw = (function(){
 			.domain([d.minHeight(),(d.maxHeight()+d.minHeight())/2, d.maxHeight()])
 			.range(["#6AE817","#FFD52D","#B30409"]);
 
-		
-		var grid = g.svg.selectAll("grid")
+		var gridgroup = d3.select(".gridgroup");
+
+		var grid = gridgroup.selectAll("grid")
 			.data(d.heights)
 			.enter()
 			.append("g")
 			.attr("transform", function(d,i) {
 				return "translate(0," + i*g.squareSize + ")";});
-			
-				
 
-			debugger;
 
-			
 		var grid2 = grid
 			.selectAll("grid2")
-			.data(function(d) {return d})
+			.data(function(d) {return d;})
 			.enter()
 			.append("rect")
 			.attr("height", g.squareSize)
 			.attr("width", g.squareSize)
-			.attr("x",function(d,i){return i*g.squareSize})
-			.attr("fill", function(d) {return colScale(d);})
+			.attr("x",function(d,i){return i*g.squareSize;})
+			.attr("fill", function(d) {return colScale(d);});
 	}
 
 	function drawRoute() {
+		var as = MYAPP.astar;
+		var route = as.findRoute(as.point(0, 0), as.point(19, 19));
+		var routeArray = as.routeToArray(route);
+
+
+		var routeGroup = d3.select(".routeTileGroup");
+
+		var routeSelection = routeGroup
+			.selectAll(".routeTiles")
+			.data(routeArray);
+
+		routeSelection
+			.enter()
+			.append("rect")
+			.attr("height", g.squareSize/2)
+			.attr("width", g.squareSize/2)
+			.attr("x",function(d,i){return d.x*g.squareSize + g.squareSize/4;})
+			.attr("y",function(d,i){return d.y*g.squareSize + g.squareSize/4;})
+			.attr("fill", "#1C2DA6");
 
 	}
 
 
 	return {
-		drawMapHeights: drawMapHeights
+		drawMapHeights: drawMapHeights,
+		drawRoute: drawRoute
 	};
 
 })();
@@ -95,6 +119,8 @@ $(function() {
 
 	canvas.init();
 	draw.drawMapHeights();
+
+	draw.drawRoute();
 
 
 

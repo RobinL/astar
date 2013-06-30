@@ -95,6 +95,9 @@ function findRoute(from, to) {
 			return route;
 		
 		fu.forEach(possibleDirections(route.point), function(direction) {
+
+			//Add a call to 'reDraw(openlist closedlist)' here
+
 			var known = findReached(reached, direction);
 			var newLength = route.length +
 											weightedDistance(route.point, direction);
@@ -112,16 +115,24 @@ function findRoute(from, to) {
 
 
 function routeToArray(route) {
+	
+	var routeArray = [];
 
+	function pushr(r) {
+		if (r.from) {pushr(r.from);}
+		routeArray.push(r.point);
+	}
+
+	pushr(route);
+	return routeArray;
 
 }
 
 return {
 	point: point,
 	findRoute: findRoute,
-	routeToArray
+	routeToArray: routeToArray
 }
 
 
 })();
-
