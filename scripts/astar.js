@@ -97,6 +97,7 @@ function findRoute(from, to) {
 		fu.forEach(possibleDirections(route.point), function(direction) {
 
 			//Add a call to 'reDraw(openlist closedlist)' here
+			if (MYAPP.vis.draw.reDraw) MYAPP.vis.draw.reDraw(open, reached); 
 
 			var known = findReached(reached, direction);
 			var newLength = route.length +
@@ -128,10 +129,26 @@ function routeToArray(route) {
 
 }
 
+function openToArray(open) {
+	
+	var openArray = [];
+	fu.forEach(open.content, function(elem) {openArray.push(elem.point);})
+	return openArray;
+
+}
+
+function reachedToArray(reached) {
+	var reachedArray = [];
+	fu.forEach(reached, function(elem) {reachedArray.push(elem.point);})
+	return reachedArray;
+}
+
 return {
 	point: point,
 	findRoute: findRoute,
-	routeToArray: routeToArray
+	routeToArray: routeToArray,
+	openToArray:openToArray,
+	reachedToArray:reachedToArray
 }
 
 

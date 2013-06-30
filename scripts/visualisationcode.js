@@ -46,6 +46,7 @@ MYAPP.vis.draw = (function(){
 
 	var g = MYAPP.vis.globals;
 	var d = MYAPP.data;
+	var as = MYAPP.astar;
 
 
 	function drawMapHeights() {
@@ -76,7 +77,7 @@ MYAPP.vis.draw = (function(){
 	}
 
 	function drawRoute() {
-		var as = MYAPP.astar;
+		
 		var route = as.findRoute(as.point(0, 0), as.point(19, 19));
 		var routeArray = as.routeToArray(route);
 
@@ -98,10 +99,20 @@ MYAPP.vis.draw = (function(){
 
 	}
 
+	function reDraw(open, reached) {
+
+		var openData = as.openToArray(open);
+		var reachedData = as.reachedToArray(reached);
+
+		debugger;
+
+	}
+
 
 	return {
 		drawMapHeights: drawMapHeights,
-		drawRoute: drawRoute
+		drawRoute: drawRoute,
+		reDraw: reDraw
 	};
 
 })();
@@ -113,7 +124,7 @@ MYAPP.vis.draw = (function(){
 $(function() {
 
 	var d = MYAPP.data;
-	
+
 	var canvas = MYAPP.vis.canvas;
 	var draw = MYAPP.vis.draw;
 
@@ -122,17 +133,6 @@ $(function() {
 
 	draw.drawRoute();
 
-
-
-	
-
 	$("#notes").append($("<p>").append("Height: " + d.gridHeight() + " and width: " + d.gridWidth()));
-
-	
-
-
-	
-
-
 
 });
