@@ -77,6 +77,8 @@ function findRoute(from, to) {
 	var open = new u.BinaryHeap(routeScore);
 	var reached = makeReachedList();
 
+
+
 	function routeScore(route) {
 		if (route.score == undefined)
 			route.score = estimatedDistance(route.point, to) +
@@ -86,29 +88,43 @@ function findRoute(from, to) {
 	function addOpenRoute(route) {
 		open.push(route);
 		storeReached(reached, route.point, route);
+		
 	}
+
 	addOpenRoute({point: from, length: 0});
+	
+	
 
 	while (open.size() > 0) {
+
+		if (MYAPP.vis.draw.reDraw) MYAPP.vis.draw.reDraw(open, reached); 
 		var route = open.pop();
+		if (MYAPP.vis.draw.reDraw) MYAPP.vis.draw.reDraw(open, reached); 
+		
 		if (samePoint(route.point, to))
 			return route;
+
+
 		
 		fu.forEach(possibleDirections(route.point), function(direction) {
-
-			//Add a call to 'reDraw(openlist closedlist)' here
-			if (MYAPP.vis.draw.reDraw) MYAPP.vis.draw.reDraw(open, reached); 
-
+			
 			var known = findReached(reached, direction);
-			var newLength = route.length +
-											weightedDistance(route.point, direction);
+			var newLength = route.length + weightedDistance(route.point, direction);
+			
+			//If this possible direction has not been reached
+			//or if this route to the possible direction is better than before
 			if (!known || known.length > newLength){
+				
+				//Then add this possibleDirection to the open list
 				if (known)
 					open.remove(known);        
 				addOpenRoute({point: direction,
 											from: route,
 											length: newLength});
+
 			}
+			if (MYAPP.vis.draw.reDraw) MYAPP.vis.draw.reDraw(open, reached);
+		
 		});
 	}
 	return null;
@@ -130,16 +146,21 @@ function routeToArray(route) {
 }
 
 function openToArray(open) {
-	
+
 	var openArray = [];
-	fu.forEach(open.content, function(elem) {openArray.push(elem.point);})
+	fu.forEach(open.content, function(elem) {
+		openArray.push(elem.point);
+	})
 	return openArray;
 
 }
 
 function reachedToArray(reached) {
 	var reachedArray = [];
-	fu.forEach(reached, function(elem) {reachedArray.push(elem.point);})
+	fu.forEachIn(reached, function(elem,value) {
+
+		reachedArray.push(value.point);
+	})
 	return reachedArray;
 }
 

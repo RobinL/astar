@@ -28,8 +28,12 @@ MYAPP.vis.canvas = (function(){
 				.attr("transform", "translate(" + g.svgMargin.left + "," + g.svgMargin.top + ")");
 
 		var gridgroup = g.svg.append("g").attr("class", "gridgroup");
+		
+		
+		
+		var openGroup =   g.svg.append("g").attr("class","openGroup");
+		var closedGroup =   g.svg.append("g").attr("class","closedGroup");
 		var routeGroup = g.svg.append("g").attr("class","routeTileGroup");
-
 
 
 
@@ -102,9 +106,68 @@ MYAPP.vis.draw = (function(){
 	function reDraw(open, reached) {
 
 		var openData = as.openToArray(open);
-		var reachedData = as.reachedToArray(reached);
+		var closedData = as.reachedToArray(reached);
 
-		debugger;
+		var openGroup = d3.select(".openGroup");
+
+		var openRects = openGroup
+			.selectAll(".openRect")
+			.data(openData);
+
+		openRects
+			.enter()
+			.append("rect")
+			.attr("height", g.squareSize/2)
+			.attr("width", g.squareSize/2)
+			.attr("x",function(d,i){return d.x*g.squareSize + g.squareSize/4;})
+			.attr("y",function(d,i){return d.y*g.squareSize + g.squareSize/4;})
+			.attr("fill", "#1C2DA6")
+			.attr("class","openRect");
+
+
+		openRects
+			.attr("height", g.squareSize/2)
+			.attr("width", g.squareSize/2)
+			.attr("x",function(d,i){return d.x*g.squareSize + g.squareSize/4;})
+			.attr("y",function(d,i){return d.y*g.squareSize + g.squareSize/4;})
+			.attr("fill", "#FE25F9");  //open is pink
+
+		openRects
+			.exit()
+			.remove();
+
+
+		var closedGroup = d3.select(".closedGroup");
+
+		var closedRects = closedGroup
+			.selectAll(".closedRect")
+			.data(closedData);
+
+		closedRects
+			.enter()
+			.append("rect")
+			.attr("height", g.squareSize/3)
+			.attr("width", g.squareSize/3)
+			.attr("x",function(d,i){return d.x*g.squareSize + g.squareSize/3;})
+			.attr("y",function(d,i){return d.y*g.squareSize + g.squareSize/3;})
+			.attr("fill", "#1C3DA6")
+			.attr("class","closedRect");
+
+
+		closedRects
+			.attr("height", g.squareSize/3)
+			.attr("width", g.squareSize/3)
+			.attr("x",function(d,i){return d.x*g.squareSize + g.squareSize/3;})
+			.attr("y",function(d,i){return d.y*g.squareSize + g.squareSize/3;})
+			.attr("fill", "#4EBE03");  //closed is green
+
+		closedRects
+			.exit()
+			.remove();
+
+
+
+		
 
 	}
 
@@ -127,6 +190,7 @@ $(function() {
 
 	var canvas = MYAPP.vis.canvas;
 	var draw = MYAPP.vis.draw;
+	debugger;
 
 	canvas.init();
 	draw.drawMapHeights();
