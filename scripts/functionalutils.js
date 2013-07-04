@@ -26,11 +26,11 @@ function forEachDelay(array, action, deferred){
 
     function loop() {
       if (i < len) {
-        debugger;
+     
         action(array[i]);
 
         i++;
-        setTimeout(loop, 10)
+        setTimeout(loop, 0)
       } else {
         deferred.resolve();
       }

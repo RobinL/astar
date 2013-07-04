@@ -8,7 +8,7 @@ MYAPP.vis.globals ={
 		bottom: 20,
 		left: 20
 	},
-	squareSize: 30,
+	squareSize: 50,
 	svgHeight: function(){return MYAPP.data.gridHeight()*this.squareSize+this.svgMargin.top+this.svgMargin.bottom;},
 	svgWidth: function() {return MYAPP.data.gridWidth()*this.squareSize+this.svgMargin.left+this.svgMargin.right;}
 };
@@ -80,26 +80,59 @@ MYAPP.vis.draw = (function(){
 			.attr("fill", function(d) {return colScale(d);});
 	}
 
-	function drawRoute() {
+	function drawRoute(route) {
 		
 		var route = as.findRoute(as.point(0, 0), as.point(19, 19));
+		
+
+		
+
+		
+
+	}
+
+	function drawRouteOnly(route) {
+
 		var routeArray = as.routeToArray(route);
 
+			var routeGroup = d3.select(".routeTileGroup");
 
-		var routeGroup = d3.select(".routeTileGroup");
 
-		var routeSelection = routeGroup
-			.selectAll(".routeTiles")
-			.data(routeArray);
 
-		routeSelection
-			.enter()
-			.append("rect")
-			.attr("height", g.squareSize/2)
-			.attr("width", g.squareSize/2)
-			.attr("x",function(d,i){return d.x*g.squareSize + g.squareSize/4;})
-			.attr("y",function(d,i){return d.y*g.squareSize + g.squareSize/4;})
-			.attr("fill", "#1C2DA6");
+			var routeSelection = routeGroup
+				.selectAll(".routeTiles")
+				.remove();
+
+				debugger;
+
+			var routeSelection = routeGroup
+				.selectAll(".routeTiles") 
+				.data(routeArray);
+
+			routeSelection
+				.enter()
+				.append("rect")
+				.attr("class", "routeTiles")
+				.attr("height",  g.squareSize/2)
+				.attr("width",  g.squareSize/2)
+				.attr("x",function(d,i){return d.x*g.squareSize + g.squareSize/4;})
+				.attr("y",function(d,i){return d.y*g.squareSize + g.squareSize/4;})
+				.attr("fill", "#1C2DA6");
+
+			routeSelection
+				.transition()
+				.delay(function(d,i){return i*30})
+				.attr("height", g.squareSize/2)
+				.attr("width", g.squareSize/2)
+				.attr("x",function(d,i){return d.x*g.squareSize + g.squareSize/4;})
+				.attr("y",function(d,i){return d.y*g.squareSize + g.squareSize/4;})
+				.attr("fill", "#000000")
+				.attr("stroke", "#FAFF2D")
+				.attr("stroke-width", "2px");
+
+			routeSelection
+				.exit()
+				.remove();
 
 	}
 
@@ -116,9 +149,10 @@ MYAPP.vis.draw = (function(){
 
 		openRects
 			.enter()
+
 			.append("rect")
-			.attr("height", g.squareSize/2)
-			.attr("width", g.squareSize/2)
+			.attr("height", 0)
+			.attr("width", 0)
 			.attr("x",function(d,i){return d.x*g.squareSize + g.squareSize/4;})
 			.attr("y",function(d,i){return d.y*g.squareSize + g.squareSize/4;})
 			.attr("fill", "#1C2DA6")
@@ -145,6 +179,7 @@ MYAPP.vis.draw = (function(){
 
 		closedRects
 			.enter()
+
 			.append("rect")
 			.attr("height", g.squareSize/3)
 			.attr("width", g.squareSize/3)
@@ -165,6 +200,45 @@ MYAPP.vis.draw = (function(){
 			.exit()
 			.remove();
 
+		
+
+		if (open.size() > 1) {
+		
+			var routeArray = as.routeToArray(open.content[0]);
+
+			var routeGroup = d3.select(".routeTileGroup");
+
+
+
+			var routeSelection = routeGroup
+				.selectAll(".routeTiles")
+				.data(routeArray);
+
+			routeSelection
+				.enter()
+				.append("rect")
+				.attr("class", "routeTiles")
+				.attr("height", g.squareSize/2)
+				.attr("width", g.squareSize/2)
+				.attr("x",function(d,i){return d.x*g.squareSize + g.squareSize/4;})
+				.attr("y",function(d,i){return d.y*g.squareSize + g.squareSize/4;})
+				.attr("fill", "#1C2DA6");
+
+			routeSelection
+				.attr("height", g.squareSize/2)
+				.attr("width", g.squareSize/2)
+				.attr("x",function(d,i){return d.x*g.squareSize + g.squareSize/4;})
+				.attr("y",function(d,i){return d.y*g.squareSize + g.squareSize/4;})
+				.attr("fill", "#1C2DA6");
+
+			routeSelection
+				.exit()
+				.remove();
+
+		}
+		
+		
+
 
 		
 
@@ -174,7 +248,8 @@ MYAPP.vis.draw = (function(){
 	return {
 		drawMapHeights: drawMapHeights,
 		drawRoute: drawRoute,
-		reDraw: reDraw
+		reDraw: reDraw,
+		drawRouteOnly:drawRouteOnly
 	};
 
 })();

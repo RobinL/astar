@@ -111,7 +111,9 @@ function findRoute(from, to) {
 			if (MYAPP.vis.draw.reDraw) MYAPP.vis.draw.reDraw(open, reached); 
 			
 			if (samePoint(route.point, to)){
-				
+				//drawroute
+				debugger;
+				MYAPP.vis.draw.drawRoute(route)
 				return route;
 			}
 
@@ -142,10 +144,12 @@ function findRoute(from, to) {
 			},myDeferred);
 
 			myDeferred.done(function(){
-
+				route = open.content[0];
 				if (!(samePoint(route.point, to))){
-					
-					setTimeout(doAnim,10)
+					setTimeout(doAnim,0)
+				} else {
+					debugger;
+					MYAPP.vis.draw.drawRouteOnly(route);
 				}
 			})
 		};
@@ -154,6 +158,8 @@ function findRoute(from, to) {
 		
 		
 		}
+
+
 
 	}
 
