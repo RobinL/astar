@@ -112,7 +112,7 @@ function findRoute(from, to) {
 			
 			if (samePoint(route.point, to)){
 				//drawroute
-				debugger;
+			
 				MYAPP.vis.draw.drawRoute(route)
 				return route;
 			}
@@ -148,7 +148,7 @@ function findRoute(from, to) {
 				if (!(samePoint(route.point, to))){
 					setTimeout(doAnim,0)
 				} else {
-					debugger;
+					
 					MYAPP.vis.draw.drawRouteOnly(route);
 				}
 			})

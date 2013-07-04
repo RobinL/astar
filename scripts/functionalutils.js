@@ -26,9 +26,7 @@ function forEachDelay(array, action, deferred){
 
     function loop() {
       if (i < len) {
-     
         action(array[i]);
-
         i++;
         setTimeout(loop, 0)
       } else {

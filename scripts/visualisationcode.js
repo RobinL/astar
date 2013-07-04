@@ -8,7 +8,7 @@ MYAPP.vis.globals ={
 		bottom: 20,
 		left: 20
 	},
-	squareSize: 50,
+	squareSize: 30,
 	svgHeight: function(){return MYAPP.data.gridHeight()*this.squareSize+this.svgMargin.top+this.svgMargin.bottom;},
 	svgWidth: function() {return MYAPP.data.gridWidth()*this.squareSize+this.svgMargin.left+this.svgMargin.right;}
 };
@@ -61,34 +61,58 @@ MYAPP.vis.draw = (function(){
 
 		var gridgroup = d3.select(".gridgroup");
 
-		var grid = gridgroup.selectAll("grid")
+		var grid = gridgroup.selectAll(".gridrow")
 			.data(d.heights)
+			
+		grid
 			.enter()
 			.append("g")
+			.attr("class","gridrow")
+			.attr("transform", function(d,i) {
+				return "translate(0," + i*g.squareSize + ")";});
+
+		grid
+			.attr("class","gridrow")
 			.attr("transform", function(d,i) {
 				return "translate(0," + i*g.squareSize + ")";});
 
 
 		var grid2 = grid
-			.selectAll("grid2")
+			.selectAll(".hr")
 			.data(function(d) {return d;})
+
+		grid2
 			.enter()
 			.append("rect")
+			.attr("class", "hr")
 			.attr("height", g.squareSize)
 			.attr("width", g.squareSize)
 			.attr("x",function(d,i){return i*g.squareSize;})
-			.attr("fill", function(d) {return colScale(d);});
+			.attr("fill", function(d) {return colScale(d);})
+			.attr("data-x",function(d,i,j) {return ""+i })
+			.attr("data-y",function(d,i,j) {return ""+j })
+
+		grid2
+			.attr("class", "hr")
+			.attr("height", g.squareSize)
+			.attr("width", g.squareSize)
+			.attr("x",function(d,i){return i*g.squareSize;})
+			.attr("fill", function(d) {return colScale(d);})
+			.attr("data-x",function(d,i,j) {return ""+i })
+			.attr("data-y",function(d,i,j) {return ""+j })
+
+	
+
+
+
 	}
+
+
 
 	function drawRoute(route) {
 		
 		var route = as.findRoute(as.point(0, 0), as.point(19, 19));
 		
-
-		
-
-		
-
 	}
 
 	function drawRouteOnly(route) {
@@ -255,22 +279,3 @@ MYAPP.vis.draw = (function(){
 })();
 
 
-
-
-
-$(function() {
-
-	var d = MYAPP.data;
-
-	var canvas = MYAPP.vis.canvas;
-	var draw = MYAPP.vis.draw;
-
-
-	canvas.init();
-	draw.drawMapHeights();
-
-	draw.drawRoute();
-
-	$("#notes").append($("<p>").append("Height: " + d.gridHeight() + " and width: " + d.gridWidth()));
-
-});

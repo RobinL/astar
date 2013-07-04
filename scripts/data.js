@@ -49,6 +49,10 @@ var minHeight = function() {
 	return Math.min.apply(Math, MYAPP.utilities.flatten(heights));
 }
 
+var setHeight = function(y,x,height) {
+	heights[y][x] = height;
+}
+
 
 return {
 	heightAt: heightAt,
@@ -56,7 +60,8 @@ return {
 	gridWidth:gridWidth,
 	heights: heights,
 	maxHeight:maxHeight,
-	minHeight:minHeight
+	minHeight:minHeight,
+	setHeight:setHeight
 }
 
 })();
