@@ -73,10 +73,11 @@ function findReached(list, point) {
 }
 
 
+
+
 function findRoute(from, to) {
 	var open = new u.BinaryHeap(routeScore);
 	var reached = makeReachedList();
-
 
 
 	function routeScore(route) {
@@ -92,42 +93,71 @@ function findRoute(from, to) {
 	}
 
 	addOpenRoute({point: from, length: 0});
+
+
 	
-	
 
-	while (open.size() > 0) {
-
-		if (MYAPP.vis.draw.reDraw) MYAPP.vis.draw.reDraw(open, reached); 
-		var route = open.pop();
-		if (MYAPP.vis.draw.reDraw) MYAPP.vis.draw.reDraw(open, reached); 
-		
-		if (samePoint(route.point, to))
-			return route;
+	var timeOut = setTimeout(doAnim,0);
 
 
-		
-		fu.forEach(possibleDirections(route.point), function(direction) {
+
+	function doAnim() {
+
+
+		if (open.size() > 0) {
+
+			if (MYAPP.vis.draw.reDraw) MYAPP.vis.draw.reDraw(open, reached); 
+			var route = open.pop();
+			if (MYAPP.vis.draw.reDraw) MYAPP.vis.draw.reDraw(open, reached); 
 			
-			var known = findReached(reached, direction);
-			var newLength = route.length + weightedDistance(route.point, direction);
-			
-			//If this possible direction has not been reached
-			//or if this route to the possible direction is better than before
-			if (!known || known.length > newLength){
+			if (samePoint(route.point, to)){
 				
-				//Then add this possibleDirection to the open list
-				if (known)
-					open.remove(known);        
-				addOpenRoute({point: direction,
-											from: route,
-											length: newLength});
-
+				return route;
 			}
-			if (MYAPP.vis.draw.reDraw) MYAPP.vis.draw.reDraw(open, reached);
+
+			var myDeferred = $.Deferred();
+
+			
+			fu.forEachDelay(possibleDirections(route.point), function(direction) {
+
+				if (MYAPP.vis.draw.reDraw) MYAPP.vis.draw.reDraw(open, reached);
+				
+				var known = findReached(reached, direction);
+				var newLength = route.length + weightedDistance(route.point, direction);
+				
+				//If this possible direction has not been reached
+				//or if this route to the possible direction is better than before
+				if (!known || known.length > newLength){
+					
+					//Then add this possibleDirection to the open list
+					if (known)
+						open.remove(known);        
+					addOpenRoute({point: direction,
+												from: route,
+												length: newLength});
+
+				}
+				
+			
+			},myDeferred);
+
+			myDeferred.done(function(){
+
+				if (!(samePoint(route.point, to))){
+					
+					setTimeout(doAnim,10)
+				}
+			})
+		};
+
+		if (open.size() == 0) {
 		
-		});
+		
+		}
+
 	}
-	return null;
+
+
 }
 
 

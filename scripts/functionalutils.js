@@ -15,6 +15,36 @@ function forEach(array, action) {
   }
 }
 
+function forEachDelay(array, action, deferred){
+
+  var len = array.length;
+  try {
+
+    var i = 0;
+
+    var timeOut = setTimeout(loop,0);
+
+    function loop() {
+      if (i < len) {
+        debugger;
+        action(array[i]);
+
+        i++;
+        setTimeout(loop, 10)
+      } else {
+        deferred.resolve();
+      }
+
+    }
+    
+  }
+  
+  catch(e) {
+    if (e != Break)
+      throw e;
+  }
+}
+
 function forEachIn(object, action) {
   try {
     for (var property in object) {
@@ -134,7 +164,8 @@ return {
 	method:method,
 	compose:compose,
 	op:op,
-	every: every
+	every: every,
+  forEachDelay:forEachDelay
 };
 
 })();

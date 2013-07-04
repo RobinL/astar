@@ -166,7 +166,6 @@ MYAPP.vis.draw = (function(){
 			.remove();
 
 
-
 		
 
 	}
@@ -190,7 +189,7 @@ $(function() {
 
 	var canvas = MYAPP.vis.canvas;
 	var draw = MYAPP.vis.draw;
-	debugger;
+
 
 	canvas.init();
 	draw.drawMapHeights();
